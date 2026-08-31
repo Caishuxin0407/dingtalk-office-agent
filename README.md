@@ -111,6 +111,7 @@ python -m app.dingtalk_bot
 ```bash
 python -m pytest -q
 ```
+测试会自动创建独立临时 SQLite 数据库，不读取或修改本地演示数据库 `office_agent.db`。
 
 当前已覆盖：
 

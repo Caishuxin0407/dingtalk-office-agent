@@ -1,9 +1,13 @@
+import os
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, Integer, String, Text, create_engine, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
-DATABASE_URL = "sqlite:///./office_agent.db"
+DATABASE_URL = os.getenv(
+    "DATABASE_URL",
+    "sqlite:///./office_agent.db",
+)
 
 engine = create_engine(
     DATABASE_URL,
