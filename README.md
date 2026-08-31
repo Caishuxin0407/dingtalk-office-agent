@@ -129,8 +129,6 @@ python -m pytest -q
 
 ## 后续计划
 
-- 使用临时 SQLite 数据库完善集成测试。
-- 增加请求审计日志、工具调用成功率与响应耗时监控。
 - 在取得最小必要权限后接入真实钉钉待办或业务系统 API。
 - 将本地白名单身份映射升级为企业统一身份服务。
 
@@ -142,7 +140,6 @@ python -m pytest -q
 
 ```bash
 python -m app.metrics_report
-
 ```
-运行日志位于 `logs/agent.log`，该目录已被 `.gitignore` 排除，不会上传至 GitHub。
 
+运行日志位于 `logs/agent.log`，该目录已被 `.gitignore` 排除，不会上传至 GitHub。
