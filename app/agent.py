@@ -1,5 +1,5 @@
 import os
-
+from time import perf_counter
 from dotenv import load_dotenv
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
@@ -8,6 +8,8 @@ from app.tools.announcements import search_announcements
 from app.tools.expenses import query_my_expense_claims
 from app.tools.todos import complete_my_todo, create_my_todo, query_my_todos
 from app.user_context import reset_current_employee, set_current_employee
+from app.metrics import log_agent_request
+
 load_dotenv()
 
 if not os.getenv("OPENAI_API_KEY"):
@@ -47,15 +49,33 @@ agent = create_agent(
 )
 
 
+
 def ask_agent(user_message: str, employee: str) -> str:
     token = set_current_employee(employee)
+    started_at = perf_counter()
+    success = False
+    error = None
 
     try:
         result = agent.invoke(
             {"messages": [{"role": "user", "content": user_message}]}
         )
+        success = True
         return result["messages"][-1].content
+    except Exception as exc:
+        error = f"{type(exc).__name__}: {exc}"
+        raise
     finally:
-        reset_current_employee(token)
+        duration_ms = (perf_counter() - started_at) * 1000
 
+        try:
+            log_agent_request(
+                employee=employee,
+                message=user_message,
+                duration_ms=duration_ms,
+                success=success,
+                error=error,
+            )
+        finally:
+            reset_current_employee(token)
 
